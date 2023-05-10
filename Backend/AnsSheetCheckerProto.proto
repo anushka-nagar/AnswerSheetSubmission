@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option go_package = "./AnsSheetCheckerGenerated";
+
+
+package AnsSheetCheckerGenerated;
+
+message File {
+  string FileName = 1;
+  string LocalFileName = 2;
+  string FilePath = 3;
+  int64 FileSize = 4;
+  bytes FileBuffer = 5;
+}
+
+message FileArray {
+  repeated File File = 1;
+}
+
+message Submission {
+  int64 Id = 1;
+  string StudentName = 2;
+  string StudentEmail = 3;
+  File File = 4;
+  int64 Timestamp = 5;
+}
+
+message SubmissionsArray {
+  repeated Submission Submission = 1;
+}
+
+message ByIdRequest {
+  int64 Id = 1;
+}
+
+message ByIdsRequest {
+  repeated int64 Ids = 1;
+}
+
+enum Url {
+  AddSubmission = 0;
+  GetSubmissionById = 1;
+  GetAllSubmissionsByIds = 2;
+  GetAllSubmissions = 3;
+  UpdateSubmissionById = 4;
+  DeleteSubmissionById = 5;
+  GetUrlRequestCounter = 6;
+}
+
+message GetUrlRequestCounterRequest {
+  Url Url = 1;
+}
+
+message GetUrlRequestCounterResponse {
+  int64 N = 1;
+}
+
+message Empty {
+}
+
+service AnsSheetChecker {
+  rpc AddSubmission (Submission) returns (Submission);
+  rpc GetSubmissionById (ByIdRequest) returns (Submission);
+  rpc GetAllSubmissionsByIds (ByIdsRequest) returns (SubmissionsArray);
+  rpc GetAllSubmissions (Empty) returns (SubmissionsArray);
+  rpc UpdateSubmissionById (Submission) returns (Submission);
+  rpc DeleteSubmissionById (ByIdRequest) returns (Empty);
+  rpc GetUrlRequestCounter (GetUrlRequestCounterRequest) returns (GetUrlRequestCounterResponse);
+  rpc DownloadFiles (Empty) returns (stream File);
+  rpc uploadFiles (stream File) returns (FileArray);
+}
